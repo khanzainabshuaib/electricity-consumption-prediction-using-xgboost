@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Electricity Consumption Prediction</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#0F2027,#203A43,#2C5364);
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:30px;
+
+}
+
+.container{
+
+width:100%;
+max-width:700px;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.2);
+
+border-radius:25px;
+
+padding:40px;
+
+box-shadow:0 10px 40px rgba(0,0,0,.35);
+
+color:white;
+
+}
+
+h1{
+
+text-align:center;
+
+font-size:34px;
+
+margin-bottom:8px;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+opacity:.9;
+
+margin-bottom:30px;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:18px;
+
+}
+
+.input-box{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+label{
+
+margin-bottom:8px;
+
+font-size:14px;
+
+font-weight:500;
+
+}
+
+.input{
+
+position:relative;
+
+}
+
+.input i{
+
+position:absolute;
+
+left:15px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:#00E5FF;
+
+}
+
+.input input{
+
+width:100%;
+
+padding:13px 13px 13px 45px;
+
+border:none;
+
+outline:none;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.15);
+
+color:white;
+
+font-size:15px;
+
+}
+
+.input input::placeholder{
+
+color:#ddd;
+
+}
+
+button{
+
+width:100%;
+
+margin-top:30px;
+
+padding:15px;
+
+border:none;
+
+border-radius:15px;
+
+background:linear-gradient(45deg,#00C6FF,#0072FF);
+
+color:white;
+
+font-size:18px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 10px 25px rgba(0,0,0,.35);
+
+}
+
+.result{
+
+margin-top:30px;
+
+padding:20px;
+
+border-radius:15px;
+
+background:rgba(255,255,255,.15);
+
+text-align:center;
+
+font-size:24px;
+
+font-weight:700;
+
+color:#00FF99;
+
+}
+
+.footer{
+
+margin-top:25px;
+
+text-align:center;
+
+font-size:14px;
+
+opacity:.8;
+
+}
+
+@media(max-width:768px){
+
+.grid{
+
+grid-template-columns:1fr;
+
+}
+
+.container{
+
+padding:25px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1><i class="fa-solid fa-bolt"></i> Electricity Consumption Prediction</h1>
+
+<p class="subtitle">
+Predict Household Electricity Consumption using XGBoost Machine Learning
+</p>
+
+<form action="/predict" method="POST">
+
+<div class="grid">
+
+<div class="input-box">
+<label>Global Reactive Power</label>
+<div class="input">
+<i class="fa-solid fa-gauge-high"></i>
+<input type="number" step="any" name="Global_reactive_power" placeholder="Example : 0.418" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Voltage</label>
+<div class="input">
+<i class="fa-solid fa-bolt"></i>
+<input type="number" step="any" name="Voltage" placeholder="Example : 234.84" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Global Intensity</label>
+<div class="input">
+<i class="fa-solid fa-chart-line"></i>
+<input type="number" step="any" name="Global_intensity" placeholder="Example : 18.4" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Sub Metering 1</label>
+<div class="input">
+<i class="fa-solid fa-plug-circle-bolt"></i>
+<input type="number" step="any" name="Sub_metering_1" placeholder="Example : 0" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Sub Metering 2</label>
+<div class="input">
+<i class="fa-solid fa-plug-circle-check"></i>
+<input type="number" step="any" name="Sub_metering_2" placeholder="Example : 1" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Sub Metering 3</label>
+<div class="input">
+<i class="fa-solid fa-plug-circle-plus"></i>
+<input type="number" step="any" name="Sub_metering_3" placeholder="Example : 17" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Year</label>
+<div class="input">
+<i class="fa-solid fa-calendar"></i>
+<input type="number" name="Year" placeholder="2007" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Month</label>
+<div class="input">
+<i class="fa-solid fa-calendar-days"></i>
+<input type="number" name="Month" placeholder="2" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Day</label>
+<div class="input">
+<i class="fa-solid fa-calendar-week"></i>
+<input type="number" name="Day" placeholder="15" required>
+</div>
+</div>
+
+<div class="input-box">
+<label>Hour</label>
+<div class="input">
+<i class="fa-solid fa-clock"></i>
+<input type="number" name="Hour" placeholder="18" required>
+</div>
+</div>
+
+</div>
+
+<button type="submit">
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+Predict Electricity Consumption
+</button>
+
+</form>
+
+{% if prediction_text %}
+
+<div class="result">
+
+⚡ {{ prediction_text }}
+
+</div>
+
+{% endif %}
+
+<div class="footer">
+
+Made with ❤️ using Flask + XGBoost
+
+</div>
+
+</div>
+
+</body>
+</html>
